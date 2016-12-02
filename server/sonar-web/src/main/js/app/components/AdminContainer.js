@@ -19,7 +19,7 @@
  */
 import React from 'react';
 import { connect } from 'react-redux';
-import SettingsNav from './nav/settings/settings-nav';
+import SettingsNav from './nav/settings/SettingsNav';
 import NotAuthorized from './NotAuthorized';
 import { getCurrentUser } from '../store/rootReducer';
 import { isUserAdmin } from '../../helpers/users';

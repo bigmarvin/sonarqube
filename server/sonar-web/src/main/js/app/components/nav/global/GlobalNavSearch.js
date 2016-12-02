@@ -20,7 +20,7 @@
 import Backbone from 'backbone';
 import React from 'react';
 import { connect } from 'react-redux';
-import SearchView from './search-view';
+import SearchView from './SearchView';
 import { getCurrentUser } from '../../../store/rootReducer';
 
 function contains (root, node) {
@@ -33,12 +33,10 @@ function contains (root, node) {
   return false;
 }
 
-const GlobalNavSearch = React.createClass({
-  getInitialState() {
-    return { open: false };
-  },
+class GlobalNavSearch extends React.Component {
+  state = { open: false };
 
-  componentDidMount() {
+  componentDidMount () {
     key('s', () => {
       const isModalOpen = document.querySelector('html').classList.contains('modal-open');
       if (!isModalOpen) {
@@ -46,55 +44,55 @@ const GlobalNavSearch = React.createClass({
       }
       return false;
     });
-  },
+  }
 
-  componentWillUnmount() {
+  componentWillUnmount () {
     this.closeSearch();
     key.unbind('s');
-  },
+  }
 
-  openSearch() {
+  openSearch = () => {
     document.addEventListener('click', this.onClickOutside);
     this.setState({ open: true }, this.renderSearchView);
-  },
+  };
 
-  closeSearch() {
+  closeSearch = () => {
     document.removeEventListener('click', this.onClickOutside);
     this.resetSearchView();
     this.setState({ open: false });
-  },
+  };
 
-  renderSearchView() {
+  renderSearchView = () => {
     const searchContainer = this.refs.container;
     this.searchView = new SearchView({
       model: new Backbone.Model(this.props),
       hide: this.closeSearch
     });
     this.searchView.render().$el.appendTo(searchContainer);
-  },
+  };
 
-  resetSearchView() {
+  resetSearchView = () => {
     if (this.searchView) {
       this.searchView.destroy();
     }
-  },
+  };
 
-  onClick(e) {
+  onClick = e => {
     e.preventDefault();
     if (this.state.open) {
       this.closeSearch();
     } else {
       this.openSearch();
     }
-  },
+  };
 
-  onClickOutside(e) {
+  onClickOutside = e => {
     if (!contains(this.refs.dropdown, e.target)) {
       this.closeSearch();
     }
-  },
+  };
 
-  render() {
+  render () {
     const dropdownClassName = 'dropdown' + (this.state.open ? ' open' : '');
     return (
         <li ref="dropdown" className={dropdownClassName}>
@@ -105,7 +103,7 @@ const GlobalNavSearch = React.createClass({
         </li>
     );
   }
-});
+}
 
 const mapStateToProps = state => ({
   currentUser: getCurrentUser(state)

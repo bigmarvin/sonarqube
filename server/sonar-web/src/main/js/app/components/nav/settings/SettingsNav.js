@@ -19,38 +19,47 @@
  */
 import React from 'react';
 import classNames from 'classnames';
-import some from 'lodash/some';
-import LinksMixin from '../links-mixin';
 import { translate } from '../../../../helpers/l10n';
 
-export default React.createClass({
-  mixins: [LinksMixin],
+export default class SettingsNav extends React.Component {
+  static defaultProps = {
+    extensions: []
+  };
 
-  getDefaultProps() {
-    return { extensions: [] };
-  },
-
-  isSomethingActive(urls) {
+  isSomethingActive (urls) {
     const path = window.location.pathname;
-    return some(urls, url => path.indexOf(window.baseUrl + url) === 0);
-  },
+    return urls.some(url => path.indexOf(window.baseUrl + url) === 0);
+  }
 
-  isSecurityActive() {
+  isSecurityActive () {
     const urls = ['/users', '/groups', '/roles/global', '/permission_templates'];
     return this.isSomethingActive(urls);
-  },
+  }
 
-  isProjectsActive() {
+  isProjectsActive () {
     const urls = ['/projects_admin', '/background_tasks'];
     return this.isSomethingActive(urls);
-  },
+  }
 
-  isSystemActive() {
+  isSystemActive () {
     const urls = ['/updatecenter', '/system'];
     return this.isSomethingActive(urls);
-  },
+  }
 
-  render() {
+  renderLink(url, title, highlightUrl = url) {
+    const fullUrl = window.baseUrl + url;
+    const isActive = typeof highlightUrl === 'string' ?
+    window.location.pathname.indexOf(window.baseUrl + highlightUrl) === 0 :
+        highlightUrl(fullUrl);
+
+    return (
+        <li key={url} className={classNames({ 'active': isActive })}>
+          <a href={fullUrl}>{title}</a>
+        </li>
+    );
+  }
+
+  render () {
     const isSecurity = this.isSecurityActive();
     const isProjects = this.isProjectsActive();
     const isSystem = this.isSystemActive();
@@ -73,9 +82,7 @@ export default React.createClass({
               <ul className="nav navbar-nav nav-tabs">
                 <li className={configurationClassNames}>
                   <a className="dropdown-toggle" data-toggle="dropdown" href="#">
-                    {translate('sidebar.project_settings')}
-                    {' '}
-                    <i className="icon-dropdown"></i>
+                    {translate('sidebar.project_settings')} <i className="icon-dropdown"/>
                   </a>
                   <ul className="dropdown-menu">
                     {this.renderLink('/settings', translate('settings.page'), url => window.location.pathname === url)}
@@ -89,38 +96,29 @@ export default React.createClass({
 
                 <li className={securityClassName}>
                   <a className="dropdown-toggle" data-toggle="dropdown" href="#">
-                    {translate('sidebar.security')}
-                    {' '}
-                    <i className="icon-dropdown"></i>
+                    {translate('sidebar.security')} <i className="icon-dropdown"/>
                   </a>
                   <ul className="dropdown-menu">
                     {this.renderLink('/users', translate('users.page'))}
                     {this.renderLink('/groups', translate('user_groups.page'))}
-                    {this.renderLink('/roles/global',
-                        translate('global_permissions.page'))}
-                    {this.renderLink('/permission_templates',
-                        translate('permission_templates'))}
+                    {this.renderLink('/roles/global', translate('global_permissions.page'))}
+                    {this.renderLink('/permission_templates', translate('permission_templates'))}
                   </ul>
                 </li>
 
                 <li className={projectsClassName}>
                   <a className="dropdown-toggle" data-toggle="dropdown" href="#">
-                    {translate('sidebar.projects')}
-                    {' '}
-                    <i className="icon-dropdown"></i>
+                    {translate('sidebar.projects')} <i className="icon-dropdown"/>
                   </a>
                   <ul className="dropdown-menu">
                     {this.renderLink('/projects_admin', 'Management')}
-                    {this.renderLink('/background_tasks',
-                        translate('background_tasks.page'))}
+                    {this.renderLink('/background_tasks', translate('background_tasks.page'))}
                   </ul>
                 </li>
 
                 <li className={systemClassName}>
                   <a className="dropdown-toggle" data-toggle="dropdown" href="#">
-                    {translate('sidebar.system')}
-                    {' '}
-                    <i className="icon-dropdown"></i>
+                    {translate('sidebar.system')} <i className="icon-dropdown"/>
                   </a>
                   <ul className="dropdown-menu">
                     {this.renderLink('/updatecenter', translate('update_center.page'))}
@@ -133,4 +131,4 @@ export default React.createClass({
         </nav>
     );
   }
-});
+}

@@ -17,10 +17,8 @@
  * along with this program; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-import qs from 'querystring';
 import classNames from 'classnames';
 import React from 'react';
-import LinksMixin from '../links-mixin';
 import { translate } from '../../../../helpers/l10n';
 import { getComponentUrl } from '../../../../helpers/urls';
 
@@ -37,38 +35,44 @@ const SETTINGS_URLS = [
   '/project/deletion'
 ];
 
-export default React.createClass({
-  mixins: [LinksMixin],
+export default class ComponentNavMenu extends React.Component {
+  static propTypes = {
+    component: React.PropTypes.object.isRequired,
+    conf: React.PropTypes.object.isRequired
+  };
 
-  isDeveloper() {
+  isDeveloper () {
     return this.props.component.qualifier === 'DEV';
-  },
+  }
 
-  isView() {
+  isView () {
     const { qualifier } = this.props.component;
     return qualifier === 'VW' || qualifier === 'SVW';
-  },
+  }
 
-  periodParameter() {
-    const params = qs.parse(window.location.search.substr(1));
-    return params.period ? `&period=${params.period}` : '';
-  },
-
-  getPeriod() {
-    const params = qs.parse(window.location.search.substr(1));
-    return params.period;
-  },
-
-  isFixedDashboardActive() {
+  isFixedDashboardActive () {
     const path = window.location.pathname;
     return path.indexOf(window.baseUrl + '/dashboard') === 0 || path.indexOf(window.baseUrl + '/governance') === 0;
-  },
+  }
 
-  shouldShowAdministration() {
+  shouldShowAdministration () {
     return Object.keys(this.props.conf).some(key => this.props.conf[key]);
-  },
+  }
 
-  renderDashboardLink() {
+  renderLink (url, title, highlightUrl = url) {
+    const fullUrl = window.baseUrl + url;
+    const isActive = typeof highlightUrl === 'string' ?
+    window.location.pathname.indexOf(window.baseUrl + highlightUrl) === 0 :
+        highlightUrl(fullUrl);
+
+    return (
+        <li key={url} className={classNames({ 'active': isActive })}>
+          <a href={fullUrl}>{title}</a>
+        </li>
+    );
+  }
+
+  renderDashboardLink () {
     const url = getComponentUrl(this.props.component.key);
     const name = <i className="icon-home"/>;
     const className = classNames({ active: this.isFixedDashboardActive() });
@@ -77,9 +81,9 @@ export default React.createClass({
           <a href={url}>{name}</a>
         </li>
     );
-  },
+  }
 
-  renderCodeLink() {
+  renderCodeLink () {
     if (this.isDeveloper()) {
       return null;
     }
@@ -87,19 +91,19 @@ export default React.createClass({
     const url = `/code/?id=${encodeURIComponent(this.props.component.key)}`;
     const header = this.isView() ? translate('view_projects.page') : translate('code.page');
     return this.renderLink(url, header, '/code');
-  },
+  }
 
-  renderComponentIssuesLink() {
+  renderComponentIssuesLink () {
     const url = `/component_issues?id=${encodeURIComponent(this.props.component.key)}`;
     return this.renderLink(url, translate('issues.page'), '/component_issues');
-  },
+  }
 
-  renderComponentMeasuresLink() {
+  renderComponentMeasuresLink () {
     const url = `/component_measures/?id=${encodeURIComponent(this.props.component.key)}`;
     return this.renderLink(url, translate('layout.measures'), '/component_measures');
-  },
+  }
 
-  renderAdministration() {
+  renderAdministration () {
     if (!this.shouldShowAdministration()) {
       return null;
     }
@@ -126,81 +130,81 @@ export default React.createClass({
           </ul>
         </li>
     );
-  },
+  }
 
-  renderSettingsLink() {
+  renderSettingsLink () {
     if (!this.props.conf.showSettings) {
       return null;
     }
     const url = `/project/settings?id=${encodeURIComponent(this.props.component.key)}`;
     return this.renderLink(url, translate('project_settings.page'), '/project/settings');
-  },
+  }
 
-  renderProfilesLink() {
+  renderProfilesLink () {
     if (!this.props.conf.showQualityProfiles) {
       return null;
     }
     const url = `/project/quality_profiles?id=${encodeURIComponent(this.props.component.key)}`;
     return this.renderLink(url, translate('project_quality_profiles.page'), '/project/quality_profiles');
-  },
+  }
 
-  renderQualityGateLink() {
+  renderQualityGateLink () {
     if (!this.props.conf.showQualityGates) {
       return null;
     }
     const url = `/project/quality_gate?id=${encodeURIComponent(this.props.component.key)}`;
     return this.renderLink(url, translate('project_quality_gate.page'), '/project/quality_gate');
-  },
+  }
 
-  renderCustomMeasuresLink() {
+  renderCustomMeasuresLink () {
     if (!this.props.conf.showManualMeasures) {
       return null;
     }
     const url = `/custom_measures?id=${encodeURIComponent(this.props.component.key)}`;
     return this.renderLink(url, translate('custom_measures.page'), '/custom_measures');
-  },
+  }
 
-  renderLinksLink() {
+  renderLinksLink () {
     if (!this.props.conf.showLinks) {
       return null;
     }
     const url = `/project/links?id=${encodeURIComponent(this.props.component.key)}`;
     return this.renderLink(url, translate('project_links.page'), '/project/links');
-  },
+  }
 
-  renderPermissionsLink() {
+  renderPermissionsLink () {
     if (!this.props.conf.showPermissions) {
       return null;
     }
     const url = `/project_roles?id=${encodeURIComponent(this.props.component.key)}`;
     return this.renderLink(url, translate('permissions.page'), '/project_roles');
-  },
+  }
 
-  renderHistoryLink() {
+  renderHistoryLink () {
     if (!this.props.conf.showHistory) {
       return null;
     }
     const url = `/project/history?id=${encodeURIComponent(this.props.component.key)}`;
     return this.renderLink(url, translate('project_history.page'), '/project/history');
-  },
+  }
 
-  renderBackgroundTasksLink() {
+  renderBackgroundTasksLink () {
     if (!this.props.conf.showBackgroundTasks) {
       return null;
     }
     const url = `/project/background_tasks?id=${encodeURIComponent(this.props.component.key)}`;
     return this.renderLink(url, translate('background_tasks.page'), '/project/background_tasks');
-  },
+  }
 
-  renderUpdateKeyLink() {
+  renderUpdateKeyLink () {
     if (!this.props.conf.showUpdateKey) {
       return null;
     }
     const url = `/project/key?id=${encodeURIComponent(this.props.component.key)}`;
     return this.renderLink(url, translate('update_key.page'), '/project/key');
-  },
+  }
 
-  renderDeletionLink() {
+  renderDeletionLink () {
     const { qualifier } = this.props.component;
 
     if (qualifier !== 'TRK' && qualifier !== 'VW') {
@@ -209,14 +213,14 @@ export default React.createClass({
 
     const url = `/project/deletion?id=${encodeURIComponent(this.props.component.key)}`;
     return this.renderLink(url, translate('deletion.page'), '/project/deletion');
-  },
+  }
 
-  renderExtensions() {
+  renderExtensions () {
     const extensions = this.props.conf.extensions || [];
     return extensions.map(e => this.renderLink(e.url, e.name, e.url));
-  },
+  }
 
-  renderTools() {
+  renderTools () {
     const extensions = this.props.component.extensions || [];
     const withoutGovernance = extensions.filter(ext => ext.name !== 'Governance');
     const tools = withoutGovernance
@@ -237,9 +241,9 @@ export default React.createClass({
           </ul>
         </li>
     );
-  },
+  }
 
-  render() {
+  render () {
     return (
         <ul className="nav navbar-nav nav-tabs">
           {this.renderDashboardLink()}
@@ -251,4 +255,4 @@ export default React.createClass({
         </ul>
     );
   }
-});
+}

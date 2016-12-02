@@ -19,7 +19,7 @@
  */
 import React from 'react';
 import { connect } from 'react-redux';
-import ComponentNav from './nav/component/component-nav';
+import ComponentNav from './nav/component/ComponentNav';
 import { fetchProject } from '../store/rootActions';
 import { getComponent } from '../store/rootReducer';
 

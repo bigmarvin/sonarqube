@@ -23,10 +23,10 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { STATUSES } from '../../../../apps/background-tasks/constants';
 import { getTasksForComponent } from '../../../../api/ce';
-import ComponentNavFavorite from './component-nav-favorite';
-import ComponentNavBreadcrumbs from './component-nav-breadcrumbs';
-import ComponentNavMeta from './component-nav-meta';
-import ComponentNavMenu from './component-nav-menu';
+import ComponentNavFavorite from './ComponentNavFavorite';
+import ComponentNavBreadcrumbs from './ComponentNavBreadcrumbs';
+import ComponentNavMeta from './ComponentNavMeta';
+import ComponentNavMenu from './ComponentNavMenu';
 import RecentHistory from './RecentHistory';
 import './ComponentNav.css';
 

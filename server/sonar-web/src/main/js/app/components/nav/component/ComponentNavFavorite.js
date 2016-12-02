@@ -20,11 +20,16 @@
 import React from 'react';
 import Favorite from '../../../../components/controls/Favorite';
 
-export default React.createClass({
-  render() {
+export default class ComponentNavFavorite extends React.Component {
+  static propTypes = {
+    canBeFavorite: React.PropTypes.bool.isRequired
+  };
+
+  render () {
     if (!this.props.canBeFavorite) {
       return null;
     }
+
     return (
         <div className="navbar-context-favorite">
           <Favorite
@@ -33,4 +38,4 @@ export default React.createClass({
         </div>
     );
   }
-});
+}

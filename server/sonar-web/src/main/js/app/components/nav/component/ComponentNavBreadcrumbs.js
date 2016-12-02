@@ -18,23 +18,31 @@
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 import React from 'react';
-import classNames from 'classnames';
+import QualifierIcon from '../../../../components/shared/qualifier-icon';
 
-export default {
-  activeLink(url) {
-    return window.location.pathname.indexOf(window.baseUrl + url) === 0 ? 'active' : null;
-  },
+export default class ComponentNavBreadcrumbs extends React.Component {
+  static propTypes = {
+    breadcrumbs: React.PropTypes.array
+  };
 
-  renderLink(url, title, highlightUrl = url) {
-    const fullUrl = window.baseUrl + url;
-    const isActive = typeof highlightUrl === 'string' ?
-        window.location.pathname.indexOf(window.baseUrl + highlightUrl) === 0 :
-        highlightUrl(fullUrl);
+  render () {
+    if (!this.props.breadcrumbs) {
+      return null;
+    }
+
+    const items = this.props.breadcrumbs.map((item, index) => {
+      const url = `${window.baseUrl}/dashboard/index?id=${encodeURIComponent(item.key)}`;
+      return (
+          <li key={index}>
+            <a href={url}>
+              <QualifierIcon qualifier={item.qualifier}/>&nbsp;{item.name}
+            </a>
+          </li>
+      );
+    });
 
     return (
-        <li key={url} className={classNames({ 'active': isActive })}>
-          <a href={fullUrl}>{title}</a>
-        </li>
+        <ul className="nav navbar-nav nav-crumbs">{items}</ul>
     );
   }
-};
+}

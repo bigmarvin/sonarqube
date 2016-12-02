@@ -17,16 +17,13 @@
  * along with this program; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-import { translate } from '../../../helpers/l10n';
+import React from 'react';
+import { shallow } from 'enzyme';
+import ComponentNavBreadcrumbs from '../ComponentNavBreadcrumbs';
 
-export default {
-  getLocalizedDashboardName(baseName) {
-    const l10nKey = `dashboard.${baseName}.name`;
-    const l10nLabel = translate(l10nKey);
-    if (l10nLabel !== l10nKey) {
-      return l10nLabel;
-    } else {
-      return baseName;
-    }
-  }
-};
+it('should not render breadcrumbs with one element', function () {
+  const breadcrumbs = [{ key: 'my-project', name: 'My Project', qualifier: 'TRK' }];
+  const result = shallow(<ComponentNavBreadcrumbs breadcrumbs={breadcrumbs}/>);
+  expect(result.find('li').length).toBe(1);
+  expect(result.find('a').length).toBe(1);
+});

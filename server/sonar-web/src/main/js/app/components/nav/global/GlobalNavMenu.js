@@ -18,17 +18,22 @@
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 import React from 'react';
-import DashboardNameMixin from '../dashboard-name-mixin';
-import LinksMixin from '../links-mixin';
 import { translate } from '../../../../helpers/l10n';
 import { isUserAdmin } from '../../../../helpers/users';
 
-export default React.createClass({
-  mixins: [DashboardNameMixin, LinksMixin],
+export default class GlobalNavMenu extends React.Component {
+  static propTypes = {
+    currentUser: React.PropTypes.object.isRequired
+  };
 
-  getDefaultProps () {
-    return { globalDashboards: [], globalPages: [] };
-  },
+  static defaultProps = {
+    globalDashboards: [],
+    globalPages: []
+  };
+
+  activeLink (url) {
+    return window.location.pathname.indexOf(window.baseUrl + url) === 0 ? 'active' : null;
+  }
 
   renderProjects () {
     const controller = this.props.currentUser.isLoggedIn ? '/projects/favorite' : '/projects';
@@ -38,7 +43,7 @@ export default React.createClass({
           <a href={url}>{translate('projects.page')}</a>
         </li>
     );
-  },
+  }
 
   renderIssuesLink () {
     const query = this.props.currentUser.isLoggedIn ? '#resolved=false|assigned_to_me=true' : '#resolved=false';
@@ -48,7 +53,7 @@ export default React.createClass({
           <a href={url}>{translate('issues.page')}</a>
         </li>
     );
-  },
+  }
 
   renderRulesLink () {
     const url = window.baseUrl + '/coding_rules';
@@ -57,16 +62,16 @@ export default React.createClass({
           <a href={url}>{translate('coding_rules.page')}</a>
         </li>
     );
-  },
+  }
 
-  renderProfilesLink() {
+  renderProfilesLink () {
     const url = window.baseUrl + '/profiles';
     return (
         <li className={this.activeLink('/profiles')}>
           <a href={url}>{translate('quality_profiles.page')}</a>
         </li>
     );
-  },
+  }
 
   renderQualityGatesLink () {
     const url = window.baseUrl + '/quality_gates';
@@ -75,7 +80,7 @@ export default React.createClass({
           <a href={url}>{translate('quality_gates.page')}</a>
         </li>
     );
-  },
+  }
 
   renderAdministrationLink () {
     if (!isUserAdmin(this.props.currentUser)) {
@@ -87,7 +92,7 @@ export default React.createClass({
           <a className="navbar-admin-link" href={url}>{translate('layout.settings')}</a>
         </li>
     );
-  },
+  }
 
   renderGlobalPageLink (globalPage, index) {
     const url = window.baseUrl + globalPage.url;
@@ -96,13 +101,13 @@ export default React.createClass({
           <a href={url}>{globalPage.name}</a>
         </li>
     );
-  },
+  }
 
   renderMore () {
     if (this.props.globalPages.length === 0) {
       return null;
     }
-    const globalPages = this.props.globalPages.map(this.renderGlobalPageLink);
+    const globalPages = this.props.globalPages.map((p, i) => this.renderGlobalPageLink(p, i));
     return (
         <li className="dropdown">
           <a className="dropdown-toggle" data-toggle="dropdown" href="#">
@@ -114,7 +119,7 @@ export default React.createClass({
           </ul>
         </li>
     );
-  },
+  }
 
   render () {
     return (
@@ -129,4 +134,4 @@ export default React.createClass({
         </ul>
     );
   }
-});
+}

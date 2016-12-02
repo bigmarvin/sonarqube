@@ -22,20 +22,20 @@ import Avatar from '../../../../components/ui/Avatar';
 import RecentHistory from '../component/RecentHistory';
 import { translate } from '../../../../helpers/l10n';
 
-export default React.createClass({
-  handleLogin(e) {
+export default class GlobalNavUser extends React.Component {
+  handleLogin = e => {
     e.preventDefault();
     const returnTo = window.location.pathname + window.location.search;
     window.location = `${window.baseUrl}/sessions/new?return_to=${encodeURIComponent(returnTo)}${window.location.hash}`;
-  },
+  };
 
-  handleLogout(e) {
+  handleLogout = e => {
     e.preventDefault();
     RecentHistory.clear();
     window.location = `${window.baseUrl}/sessions/logout`;
-  },
+  };
 
-  renderAuthenticated() {
+  renderAuthenticated () {
     const { currentUser } = this.props;
     return (
         <li className="dropdown js-user-authenticated">
@@ -53,17 +53,17 @@ export default React.createClass({
           </ul>
         </li>
     );
-  },
+  }
 
-  renderAnonymous() {
+  renderAnonymous () {
     return (
         <li>
           <a onClick={this.handleLogin} href="#">{translate('layout.login')}</a>
         </li>
     );
-  },
+  }
 
-  render() {
+  render () {
     return this.props.currentUser.isLoggedIn ? this.renderAuthenticated() : this.renderAnonymous();
   }
-});
+}

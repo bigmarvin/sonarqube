@@ -19,7 +19,7 @@
  */
 // @flow
 import React from 'react';
-import GlobalNav from './nav/global/global-nav';
+import GlobalNav from './nav/global/GlobalNav';
 import GlobalFooter from './GlobalFooter';
 import GlobalMessagesContainer from './GlobalMessagesContainer';
 

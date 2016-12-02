@@ -20,22 +20,22 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import GlobalNavBranding from './GlobalNavBranding';
-import GlobalNavMenu from './global-nav-menu';
-import GlobalNavUser from './global-nav-user';
-import GlobalNavSearch from './global-nav-search';
-import ShortcutsHelpView from './shortcuts-help-view';
+import GlobalNavMenu from './GlobalNavMenu';
+import GlobalNavUser from './GlobalNavUser';
+import GlobalNavSearch from './GlobalNavSearch';
+import ShortcutsHelpView from './ShortcutsHelpView';
 import { getCurrentUser } from '../../../store/rootReducer';
 
-const GlobalNav = React.createClass({
-  componentDidMount() {
+class GlobalNav extends React.Component {
+  componentDidMount () {
     window.addEventListener('keypress', this.onKeyPress);
-  },
+  }
 
-  componentWillUnmount() {
+  componentWillUnmount () {
     window.removeEventListener('keypress', this.onKeyPress);
-  },
+  }
 
-  onKeyPress(e) {
+  onKeyPress = e => {
     const tagName = e.target.tagName;
     const code = e.keyCode || e.which;
     const isInput = tagName === 'INPUT' || tagName === 'SELECT' || tagName === 'TEXTAREA';
@@ -44,16 +44,16 @@ const GlobalNav = React.createClass({
     if (!isInput && !isModalOpen && isTriggerKey) {
       this.openHelp();
     }
-  },
+  };
 
-  openHelp(e) {
+  openHelp = e => {
     if (e) {
       e.preventDefault();
     }
     new ShortcutsHelpView().render();
-  },
+  };
 
-  render() {
+  render () {
     return (
         <nav className="navbar navbar-global page-container" id="global-navigation">
           <div className="container">
@@ -74,7 +74,7 @@ const GlobalNav = React.createClass({
         </nav>
     );
   }
-});
+}
 
 const mapStateToProps = state => ({
   currentUser: getCurrentUser(state)
