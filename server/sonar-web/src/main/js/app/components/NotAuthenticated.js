@@ -17,29 +17,23 @@
  * along with this program; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-// @flow
 import React from 'react';
-import { connect } from 'react-redux';
-import LoginForm from './LoginForm';
-import { doLogin } from '../../../app/store/rootActions';
+import { Link } from 'react-router';
 
-class LoginFormContainer extends React.Component {
-  handleSubmit = (login: string, password: string) => {
-    this.props.doLogin(login, password)
-        .then(() => window.location = this.props.location.query['return_to'] || (window.baseUrl + '/'))
-        .catch(() => { /* do nothing */ });
-  };
-
+export default class NotAuthenticated extends React.Component {
   render () {
-    // FIXME allowUsersToSignUp
+    const returnTo = window.location.pathname + window.location.search + window.location.hash;
+    const to = {
+      pathname: '/sessions/new',
+      query: { 'return_to': returnTo }
+    };
+
     return (
-        <LoginForm allowUsersToSignUp={false} onSubmit={this.handleSubmit}/>
+        <div className="alert alert-danger">
+          <p>Authentication required to see this page.</p>
+
+          <Link to={to} className="button">Log in</Link>
+        </div>
     );
   }
 }
-
-const mapStateToProps = () => ({});
-
-const mapDispatchToProps = { doLogin };
-
-export default connect(mapStateToProps, mapDispatchToProps)(LoginFormContainer);

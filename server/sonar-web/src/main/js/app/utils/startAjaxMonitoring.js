@@ -24,6 +24,8 @@ import Marionette from 'backbone.marionette';
 import escapeHtml from 'escape-html';
 import { translate } from '../../helpers/l10n';
 import { getCSRFTokenName, getCSRFTokenValue } from '../../helpers/request';
+import getStore from './getStore';
+import { requireAuthentication } from '../store/appState/duck';
 
 const defaults = {
   queue: {},
@@ -166,8 +168,8 @@ function handleAjaxError (jqXHR) {
 }
 
 function handleNotAuthenticatedError () {
-  window.location = window.baseUrl + '/sessions/new?return_to=' +
-      encodeURIComponent(window.location.pathname + window.location.search + window.location.hash);
+  const store = getStore();
+  store.dispatch(requireAuthentication());
 }
 
 $.ajaxSetup({

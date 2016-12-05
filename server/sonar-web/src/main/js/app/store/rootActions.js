@@ -26,9 +26,9 @@ import { addGlobalErrorMessage } from '../../components/store/globalMessages';
 import { parseError } from '../../apps/code/utils';
 import { setAppState } from './appState/duck';
 
-const onFail = dispatch => error => {
-  parseError(error).then(message => dispatch(addGlobalErrorMessage(message)));
-};
+const onFail = dispatch => error => (
+    parseError(error).then(message => dispatch(addGlobalErrorMessage(message)))
+);
 
 export const fetchAppState = () => dispatch => (
     getGlobalNavigation().then(
@@ -60,7 +60,10 @@ export const fetchProject = key => dispatch => (
 
 export const doLogin = (login, password) => dispatch => (
     auth.login(login, password).then(
-        () => {},
-        onFail(dispatch)
+        () => { /* everything is fine */ },
+        () => {
+          dispatch(addGlobalErrorMessage('Authentication failed'));
+          return Promise.reject();
+        }
     )
 );

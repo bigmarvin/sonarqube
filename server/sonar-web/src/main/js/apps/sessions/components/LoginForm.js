@@ -19,6 +19,7 @@
  */
 // @flow
 import React from 'react';
+import GlobalMessagesContainer from '../../../app/components/GlobalMessagesContainer';
 import { translate, translateWithParameters } from '../../../helpers/l10n';
 
 export default class LoginForm extends React.Component {
@@ -40,6 +41,8 @@ export default class LoginForm extends React.Component {
   render () {
     return (
         <form id="login_form" onSubmit={this.handleSubmit}>
+          <GlobalMessagesContainer/>
+
           <div className="big-spacer-bottom">
             <label htmlFor="login" className="login-label">{translate('login')}</label>
             <input type="text"

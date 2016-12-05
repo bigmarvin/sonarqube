@@ -56,8 +56,7 @@ import usersRoutes from '../../apps/users/routes';
 import webAPIRoutes from '../../apps/web-api/routes';
 import { maintenanceRoutes, setupRoutes } from '../../apps/maintenance/routes';
 import { globalPermissionsRoutes, projectPermissionsRoutes } from '../../apps/permissions/routes';
-import configureStore from '../../components/store/configureStore';
-import rootReducer from '../store/rootReducer';
+import getStore from './getStore';
 
 const startReactApp = () => {
   const el = document.getElementById('content');
@@ -66,7 +65,7 @@ const startReactApp = () => {
     basename: window.baseUrl + '/'
   });
 
-  const store = configureStore(rootReducer);
+  const store = getStore();
 
   render((
       <Provider store={store}>

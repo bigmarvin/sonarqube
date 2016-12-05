@@ -19,6 +19,8 @@
  */
 import { stringify } from 'querystring';
 import { getCookie } from './cookies';
+import getStore from '../app/utils/getStore';
+import { requireAuthentication } from '../app/store/appState/duck';
 
 export function getCSRFTokenName () {
   return 'X-XSRF-TOKEN';
@@ -127,16 +129,21 @@ export function request (url) {
  * @returns {*}
  */
 export function checkStatus (response) {
-  if (response.status === 401) {
-    window.location = window.baseUrl + '/sessions/new?return_to=' +
-        encodeURIComponent(window.location.pathname + window.location.search + window.location.hash);
-    return {};
-  } else if (response.status >= 200 && response.status < 300) {
-    return response;
-  } else {
+  const store = getStore();
+
+  const throwWithResponse = response => {
     const error = new Error(response.status);
     error.response = response;
     throw error;
+  };
+
+  if (response.status === 401) {
+    store.dispatch(requireAuthentication());
+    return Promise.reject();
+  } else if (response.status >= 200 && response.status < 300) {
+    return response;
+  } else {
+    throwWithResponse(response);
   }
 }
 

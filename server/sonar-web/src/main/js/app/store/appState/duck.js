@@ -18,12 +18,10 @@
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 // @flow
-import { createValue } from '../../../components/store/generalReducers';
-
 type AppState = {
   authenticationError: boolean,
   authorizationError: boolean,
-  qualifiers: Array<string>
+  qualifiers: ?Array<string>
 };
 
 export type Action = {
@@ -32,7 +30,8 @@ export type Action = {
 }
 
 export const actions = {
-  SET_APP_STATE: 'SET_APP_STATE'
+  SET_APP_STATE: 'SET_APP_STATE',
+  REQUIRE_AUTHENTICATION: 'REQUIRE_AUTHENTICATION'
 };
 
 export const setAppState = (appState: AppState): Action => ({
@@ -40,17 +39,27 @@ export const setAppState = (appState: AppState): Action => ({
   appState
 });
 
+export const requireAuthentication = () => ({
+  type: actions.REQUIRE_AUTHENTICATION
+});
+
 const defaultValue = {
   authenticationError: false,
-  authorizationError: false
+  authorizationError: false,
+  qualifiers: null
 };
 
-export default createValue(
-    (state: AppState, action: Action) => action.type === actions.SET_APP_STATE,
-    () => false,
-    (state: AppState, action: Action) => ({ ...state, ...action.appState }),
-    defaultValue
-);
+export default (state: AppState = defaultValue, action: Action) => {
+  if (action.type === actions.SET_APP_STATE) {
+    return { ...state, ...action.appState };
+  }
+
+  if (action.type === actions.REQUIRE_AUTHENTICATION) {
+    return { ...state, authenticationError: true };
+  }
+
+  return state;
+};
 
 export const getRootQualifiers = (state: AppState) => (
     state.qualifiers

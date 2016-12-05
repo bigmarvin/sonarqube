@@ -18,28 +18,16 @@
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 // @flow
-import React from 'react';
-import { connect } from 'react-redux';
-import LoginForm from './LoginForm';
-import { doLogin } from '../../../app/store/rootActions';
+import configureStore from '../../components/store/configureStore';
+import rootReducer from '../store/rootReducer';
 
-class LoginFormContainer extends React.Component {
-  handleSubmit = (login: string, password: string) => {
-    this.props.doLogin(login, password)
-        .then(() => window.location = this.props.location.query['return_to'] || (window.baseUrl + '/'))
-        .catch(() => { /* do nothing */ });
-  };
+let store;
 
-  render () {
-    // FIXME allowUsersToSignUp
-    return (
-        <LoginForm allowUsersToSignUp={false} onSubmit={this.handleSubmit}/>
-    );
-  }
-}
+const createStore = () => {
+  store = configureStore(rootReducer);
+  return store;
+};
 
-const mapStateToProps = () => ({});
-
-const mapDispatchToProps = { doLogin };
-
-export default connect(mapStateToProps, mapDispatchToProps)(LoginFormContainer);
+export default () => (
+    store ? store : createStore()
+);

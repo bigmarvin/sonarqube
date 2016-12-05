@@ -21,6 +21,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import GlobalLoading from './GlobalLoading';
+import NotAuthenticated from './NotAuthenticated';
+import NotAuthorized from './NotAuthorized';
 import { fetchCurrentUser } from '../store/users/actions';
 import { fetchLanguages, fetchAppState } from '../store/rootActions';
 import { requestMessages } from '../../helpers/l10n';
@@ -39,19 +41,32 @@ class App extends React.Component {
     loading: true
   };
 
-  componentDidMount () {
-    Promise.all([
-      requestMessages(),
-      this.props.fetchAppState(),
-      this.props.fetchCurrentUser()
-    ]).then(() => this.setState({ loading: false }));
+  finishLoading = () => {
+    this.setState({ loading: false });
+  };
 
-    this.props.fetchLanguages();
+  componentDidMount () {
+    this.props.fetchCurrentUser()
+        .then(requestMessages)
+        .then(this.props.fetchAppState)
+        .then(this.finishLoading)
+        .then(this.props.fetchLanguages)
+        .catch(this.finishLoading);
   }
 
   render () {
     if (this.state.loading) {
       return <GlobalLoading/>;
+    }
+
+    const { authenticationError, authorizationError } = this.props.appState;
+
+    if (authenticationError) {
+      return <NotAuthenticated/>;
+    }
+
+    if (authorizationError) {
+      return <NotAuthorized/>;
     }
 
     return this.props.children;
