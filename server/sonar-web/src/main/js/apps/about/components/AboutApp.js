@@ -32,6 +32,7 @@ import { translate } from '../../../helpers/l10n';
 import { searchProjects } from '../../../api/components';
 import { getFacet } from '../../../api/issues';
 import { getSettingValue } from '../../../app/store/rootReducer';
+import * as settingsAPI from '../../../api/settings';
 import '../styles.css';
 
 class AboutApp extends React.Component {
@@ -63,17 +64,23 @@ class AboutApp extends React.Component {
     return getFacet({ resolved: false }, 'types');
   }
 
+  loadCustomText () {
+    return settingsAPI.getSettingValue('sonar.lf.aboutText');
+  }
+
   loadData () {
     Promise.all([
       this.loadProjects(),
-      this.loadIssues()
+      this.loadIssues(),
+      this.loadCustomText()
     ]).then(responses => {
       if (this.mounted) {
-        const [projectsCount, issues] = responses;
+        const [projectsCount, issues, customText] = responses;
         const issueTypes = keyBy(issues.facet, 'val');
         this.setState({
           projectsCount,
           issueTypes,
+          customText,
           loading: false
         });
       }
@@ -85,8 +92,7 @@ class AboutApp extends React.Component {
       return null;
     }
 
-    // FIXME
-    const landingText = '';
+    const { customText } = this.state;
 
     const logoUrl = this.props.customLogoUrl || `${window.baseUrl}/images/logo.svg`;
     const logoWidth = Number(this.props.customLogoWidth || 100);
@@ -118,8 +124,8 @@ class AboutApp extends React.Component {
 
           <div className="about-page-container">
 
-            {landingText.length > 0 && (
-                <div className="about-page-section" dangerouslySetInnerHTML={{ __html: landingText }}/>
+            {customText != null && customText.length > 0 && (
+                <div className="about-page-section" dangerouslySetInnerHTML={{ __html: customText }}/>
             )}
 
             <div className="columns">
