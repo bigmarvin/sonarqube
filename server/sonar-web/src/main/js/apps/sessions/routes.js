@@ -19,11 +19,13 @@
  */
 import React from 'react';
 import { Route, Redirect } from 'react-router';
-import App from './components/App';
+import LoginFormContainer from './components/LoginFormContainer';
 import Logout from './components/Logout';
+import Unauthorized from './components/Unauthorized';
 
 export default [
   <Redirect key="login" from="/sessions/login" to="/sessions/new"/>,
-  <Route key="new" path="new" component={App}/>,
-  <Route key="logout" path="logout" component={Logout}/>
+  <Route key="new" path="new" component={LoginFormContainer}/>,
+  <Route key="logout" path="logout" component={Logout}/>,
+  <Route key="unauthorized" path="unauthorized" component={Unauthorized}/>,
 ];

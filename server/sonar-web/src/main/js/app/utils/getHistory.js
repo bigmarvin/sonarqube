@@ -17,20 +17,19 @@
  * along with this program; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-import React from 'react';
-import SimpleContainer from './SimpleContainer';
-import SessionsApp from '../../apps/sessions/components/App';
+// @flow
+import { useRouterHistory } from 'react-router';
+import { createHistory } from 'history';
 
-export default class NotAuthenticated extends React.Component {
-  static propTypes = {
-    location: React.PropTypes.object.isRequired
-  };
+let history;
 
-  render () {
-    return (
-        <SimpleContainer>
-          <SessionsApp location={this.props.location}/>
-        </SimpleContainer>
-    );
-  }
-}
+const ensureHistory = () => {
+  history = useRouterHistory(createHistory)({
+    basename: window.baseUrl + '/'
+  });
+  return history;
+};
+
+export default () => (
+    history ? history : ensureHistory()
+);

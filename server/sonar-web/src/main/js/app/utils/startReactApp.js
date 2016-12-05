@@ -19,8 +19,7 @@
  */
 import React from 'react';
 import { render } from 'react-dom';
-import { Router, Route, IndexRoute, useRouterHistory } from 'react-router';
-import { createHistory } from 'history';
+import { Router, Route, IndexRoute } from 'react-router';
 import { Provider } from 'react-redux';
 import App from '../components/App';
 import GlobalContainer from '../components/GlobalContainer';
@@ -57,14 +56,12 @@ import webAPIRoutes from '../../apps/web-api/routes';
 import { maintenanceRoutes, setupRoutes } from '../../apps/maintenance/routes';
 import { globalPermissionsRoutes, projectPermissionsRoutes } from '../../apps/permissions/routes';
 import getStore from './getStore';
+import getHistory from './getHistory';
 
 const startReactApp = () => {
   const el = document.getElementById('content');
 
-  const history = useRouterHistory(createHistory)({
-    basename: window.baseUrl + '/'
-  });
-
+  const history = getHistory();
   const store = getStore();
 
   render((

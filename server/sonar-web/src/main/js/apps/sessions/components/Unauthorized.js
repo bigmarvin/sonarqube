@@ -17,36 +17,33 @@
  * along with this program; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
+// @flow
 import React from 'react';
-import { connect } from 'react-redux';
-import SettingsNav from './nav/settings/SettingsNav';
-import { getCurrentUser } from '../store/rootReducer';
-import { isUserAdmin } from '../../helpers/users';
-import handleRequiredAuthorization from '../utils/handleRequiredAuthorization';
 
-class AdminContainer extends React.Component {
-  componentDidMount () {
-    if (!isUserAdmin(this.props.currentUser)) {
-      handleRequiredAuthorization();
-    }
-  }
+export default class Unauthorized extends React.Component {
+  static propTypes = {
+    location: React.PropTypes.object.isRequired
+  };
 
   render () {
-    if (!isUserAdmin(this.props.currentUser)) {
-      return null;
-    }
+    const { message } = this.props.location.query;
 
     return (
-        <div>
-          <SettingsNav/>
-          {this.props.children}
+        <div className="text-center">
+          <p id="unauthorized">
+            You're not authorized to access this page. Please contact the administrator.
+          </p>
+
+          {!!message && (
+              <p className="spacer-top">
+                {message}
+              </p>
+          )}
+
+          <div className="big-spacer-top">
+            <a href={window.baseUrl + '/'}>Home</a>
+          </div>
         </div>
     );
   }
 }
-
-const mapStateToProps = state => ({
-  currentUser: getCurrentUser(state)
-});
-
-export default connect(mapStateToProps)(AdminContainer);

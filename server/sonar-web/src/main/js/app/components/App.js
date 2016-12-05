@@ -21,16 +21,14 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import GlobalLoading from './GlobalLoading';
-import NotAuthenticated from './NotAuthenticated';
-import NotAuthorized from './NotAuthorized';
 import { fetchCurrentUser } from '../store/users/actions';
 import { fetchLanguages, fetchAppState } from '../store/rootActions';
 import { requestMessages } from '../../helpers/l10n';
-import { getAppState } from '../store/rootReducer';
 
 class App extends React.Component {
+  mounted: bool;
+
   static propTypes = {
-    appState: React.PropTypes.object.isRequired,
     fetchAppState: React.PropTypes.func.isRequired,
     fetchCurrentUser: React.PropTypes.func.isRequired,
     fetchLanguages: React.PropTypes.func.isRequired,
@@ -42,10 +40,14 @@ class App extends React.Component {
   };
 
   finishLoading = () => {
-    this.setState({ loading: false });
+    if (this.mounted) {
+      this.setState({ loading: false });
+    }
   };
 
   componentDidMount () {
+    this.mounted = true;
+
     this.props.fetchCurrentUser()
         .then(requestMessages)
         .then(this.props.fetchAppState)
@@ -54,30 +56,20 @@ class App extends React.Component {
         .catch(this.finishLoading);
   }
 
+  componentWillUnmount () {
+    this.mounted = false;
+  }
+
   render () {
     if (this.state.loading) {
       return <GlobalLoading/>;
-    }
-
-    const { authenticationError, authorizationError } = this.props.appState;
-
-    if (authenticationError) {
-      return <NotAuthenticated location={this.props.location}/>;
-    }
-
-    if (authorizationError) {
-      return <NotAuthorized location={this.props.location}/>;
     }
 
     return this.props.children;
   }
 }
 
-const mapStateToProps = state => ({
-  appState: getAppState(state)
-});
-
 export default connect(
-    mapStateToProps,
+    null,
     { fetchAppState, fetchCurrentUser, fetchLanguages }
 )(App);

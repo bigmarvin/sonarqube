@@ -30,12 +30,7 @@ class LoginFormContainer extends React.Component {
   };
 
   handleSuccessfulLogin = () => {
-    const { authenticationError, authorizationError } = this.props.appState;
-    if (authenticationError || authorizationError) {
-      window.location.reload();
-    } else {
-      window.location = this.props.location.query['return_to'] || (window.baseUrl + '/');
-    }
+    window.location = this.props.location.query['return_to'] || (window.baseUrl + '/');
   };
 
   handleSubmit = (login: string, password: string) => {

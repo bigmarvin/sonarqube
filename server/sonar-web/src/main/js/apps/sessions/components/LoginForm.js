@@ -40,47 +40,51 @@ export default class LoginForm extends React.Component {
 
   render () {
     return (
-        <form id="login_form" onSubmit={this.handleSubmit}>
+        <div>
+          <h1 className="maintenance-title text-center">Log In to SonarQube</h1>
+
           <GlobalMessagesContainer/>
 
-          <div className="big-spacer-bottom">
-            <label htmlFor="login" className="login-label">{translate('login')}</label>
-            <input type="text"
-                   id="login"
-                   name="login"
-                   className="login-input"
-                   maxLength="255"
-                   required={true}
-                   placeholder={translate('login')}
-                   value={this.state.login}
-                   onChange={e => this.setState({ login: e.target.value })}/>
+          <form id="login_form" onSubmit={this.handleSubmit}>
+            <div className="big-spacer-bottom">
+              <label htmlFor="login" className="login-label">{translate('login')}</label>
+              <input type="text"
+                     id="login"
+                     name="login"
+                     className="login-input"
+                     maxLength="255"
+                     required={true}
+                     placeholder={translate('login')}
+                     value={this.state.login}
+                     onChange={e => this.setState({ login: e.target.value })}/>
 
-            {this.props.allowUsersToSignUp && (
-                <div className="note spacer-top spacer-left spacer-right">
-                  {translateWithParameters('sessions.new_account', window.baseUrl + '/users/new')}
-                </div>
-            )}
-          </div>
-
-          <div className="big-spacer-bottom">
-            <label htmlFor="password" className="login-label">{translate('password')}</label>
-            <input type="password"
-                   id="password"
-                   name="password"
-                   className="login-input"
-                   required={true}
-                   placeholder={translate('password')}
-                   value={this.state.password}
-                   onChange={e => this.setState({ password: e.target.value })}/>
-          </div>
-
-          <div>
-            <div className="text-right overflow-hidden">
-              <button name="commit" type="submit">{translate('sessions.log_in')}</button>
-              <a className="spacer-left" href={window.baseUrl + '/'}>{translate('cancel')}</a>
+              {this.props.allowUsersToSignUp && (
+                  <div className="note spacer-top spacer-left spacer-right">
+                    {translateWithParameters('sessions.new_account', window.baseUrl + '/users/new')}
+                  </div>
+              )}
             </div>
-          </div>
-        </form>
+
+            <div className="big-spacer-bottom">
+              <label htmlFor="password" className="login-label">{translate('password')}</label>
+              <input type="password"
+                     id="password"
+                     name="password"
+                     className="login-input"
+                     required={true}
+                     placeholder={translate('password')}
+                     value={this.state.password}
+                     onChange={e => this.setState({ password: e.target.value })}/>
+            </div>
+
+            <div>
+              <div className="text-right overflow-hidden">
+                <button name="commit" type="submit">{translate('sessions.log_in')}</button>
+                <a className="spacer-left" href={window.baseUrl + '/'}>{translate('cancel')}</a>
+              </div>
+            </div>
+          </form>
+        </div>
     );
   }
 }

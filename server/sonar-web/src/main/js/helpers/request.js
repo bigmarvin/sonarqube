@@ -19,8 +19,7 @@
  */
 import { stringify } from 'querystring';
 import { getCookie } from './cookies';
-import getStore from '../app/utils/getStore';
-import { requireAuthentication } from '../app/store/appState/duck';
+import handleRequiredAuthentication from '../app/utils/handleRequiredAuthentication';
 
 export function getCSRFTokenName () {
   return 'X-XSRF-TOKEN';
@@ -129,8 +128,6 @@ export function request (url) {
  * @returns {*}
  */
 export function checkStatus (response) {
-  const store = getStore();
-
   const throwWithResponse = response => {
     const error = new Error(response.status);
     error.response = response;
@@ -138,7 +135,7 @@ export function checkStatus (response) {
   };
 
   if (response.status === 401) {
-    store.dispatch(requireAuthentication());
+    handleRequiredAuthentication();
     return Promise.reject();
   } else if (response.status >= 200 && response.status < 300) {
     return response;

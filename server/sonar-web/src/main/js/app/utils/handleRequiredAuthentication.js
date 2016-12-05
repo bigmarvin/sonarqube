@@ -18,20 +18,19 @@
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 // @flow
-import React from 'react';
-import LoginFormContainer from './LoginFormContainer';
+import getStore from './getStore';
+import getHistory from './getHistory';
+import { requireAuthentication } from '../store/appState/duck';
 
-export default class App extends React.Component {
-  static propTypes = {
-    location: React.PropTypes.object.isRequired
-  };
+export default () => {
+  const store = getStore();
+  const history = getHistory();
 
-  render () {
-    return (
-        <div>
-          <h1 className="maintenance-title text-center">Log In to SonarQube</h1>
-          <LoginFormContainer location={this.props.location}/>
-        </div>
-    );
-  }
-}
+  const returnTo = window.location.pathname + window.location.search + window.location.hash;
+
+  store.dispatch(requireAuthentication());
+  history.replace({
+    pathname: '/sessions/new',
+    query: { 'return_to': returnTo }
+  });
+};
