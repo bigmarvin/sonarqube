@@ -18,13 +18,19 @@
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 import React from 'react';
+import SimpleContainer from './SimpleContainer';
+import SessionsApp from '../../apps/sessions/components/App';
 
 export default class NotAuthorized extends React.Component {
+  static propTypes = {
+    location: React.PropTypes.object.isRequired
+  };
+
   render () {
     return (
-      <div className="alert alert-danger">
-        You are not authorized to see this page.
-      </div>
+        <SimpleContainer>
+          <SessionsApp location={this.props.location}/>
+        </SimpleContainer>
     );
   }
 }

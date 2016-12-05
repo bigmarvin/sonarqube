@@ -20,16 +20,24 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import SettingsNav from './nav/settings/SettingsNav';
-import NotAuthorized from './NotAuthorized';
 import { getCurrentUser } from '../store/rootReducer';
 import { isUserAdmin } from '../../helpers/users';
+import { requireAuthorization } from '../store/appState/duck';
 
 class AdminContainer extends React.Component {
-  render () {
-    const { currentUser } = this.props;
+  static propTypes = {
+    requireAuthorization: React.PropTypes.func.isRequired
+  };
 
-    if (!isUserAdmin(currentUser)) {
-      return <NotAuthorized/>;
+  componentDidMount () {
+    if (!isUserAdmin(this.props.currentUser)) {
+      this.props.requireAuthorization();
+    }
+  }
+
+  render () {
+    if (!isUserAdmin(this.props.currentUser)) {
+      return null;
     }
 
     return (
@@ -45,4 +53,6 @@ const mapStateToProps = state => ({
   currentUser: getCurrentUser(state)
 });
 
-export default connect(mapStateToProps)(AdminContainer);
+const mapDispatchToProps = { requireAuthorization };
+
+export default connect(mapStateToProps, mapDispatchToProps)(AdminContainer);

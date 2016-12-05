@@ -22,13 +22,9 @@ import React from 'react';
 import LoginFormContainer from './LoginFormContainer';
 
 export default class App extends React.Component {
-  componentDidMount () {
-    document.querySelector('html').classList.add('dashboard-page');
-  }
-
-  componentWillUnmount () {
-    document.querySelector('html').classList.remove('dashboard-page');
-  }
+  static propTypes = {
+    location: React.PropTypes.object.isRequired
+  };
 
   render () {
     return (

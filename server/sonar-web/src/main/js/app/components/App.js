@@ -62,11 +62,11 @@ class App extends React.Component {
     const { authenticationError, authorizationError } = this.props.appState;
 
     if (authenticationError) {
-      return <NotAuthenticated/>;
+      return <NotAuthenticated location={this.props.location}/>;
     }
 
     if (authorizationError) {
-      return <NotAuthorized/>;
+      return <NotAuthorized location={this.props.location}/>;
     }
 
     return this.props.children;

@@ -22,12 +22,27 @@ import React from 'react';
 import { connect } from 'react-redux';
 import LoginForm from './LoginForm';
 import { doLogin } from '../../../app/store/rootActions';
+import { getAppState } from '../../../app/store/rootReducer';
 
 class LoginFormContainer extends React.Component {
+  static propTypes = {
+    location: React.PropTypes.object.isRequired
+  };
+
+  handleSuccessfulLogin = () => {
+    const { authenticationError, authorizationError } = this.props.appState;
+    if (authenticationError || authorizationError) {
+      window.location.reload();
+    } else {
+      window.location = this.props.location.query['return_to'] || (window.baseUrl + '/');
+    }
+  };
+
   handleSubmit = (login: string, password: string) => {
-    this.props.doLogin(login, password)
-        .then(() => window.location = this.props.location.query['return_to'] || (window.baseUrl + '/'))
-        .catch(() => { /* do nothing */ });
+    this.props.doLogin(login, password).then(
+        this.handleSuccessfulLogin,
+        () => { /* do nothing */ }
+    );
   };
 
   render () {
@@ -38,7 +53,9 @@ class LoginFormContainer extends React.Component {
   }
 }
 
-const mapStateToProps = () => ({});
+const mapStateToProps = state => ({
+  appState: getAppState(state)
+});
 
 const mapDispatchToProps = { doLogin };
 

@@ -17,20 +17,26 @@
  * along with this program; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
+// @flow
 import React from 'react';
-import SimpleContainer from './SimpleContainer';
-import SessionsApp from '../../apps/sessions/components/App';
+import { connect } from 'react-redux';
+import GlobalMessagesContainer from '../../../app/components/GlobalMessagesContainer';
+import { doLogout } from '../../../app/store/rootActions';
 
-export default class NotAuthenticated extends React.Component {
-  static propTypes = {
-    location: React.PropTypes.object.isRequired
-  };
+class Logout extends React.Component {
+  componentDidMount () {
+    this.props.doLogout()
+        .then(() => window.location = window.baseUrl + '/')
+        .catch(() => { /* do nothing */ });
+  }
 
   render () {
-    return (
-        <SimpleContainer>
-          <SessionsApp location={this.props.location}/>
-        </SimpleContainer>
-    );
+    return <GlobalMessagesContainer/>;
   }
 }
+
+const mapStateToProps = () => ({});
+
+const mapDispatchToProps = { doLogout };
+
+export default connect(mapStateToProps, mapDispatchToProps)(Logout);

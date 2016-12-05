@@ -67,3 +67,13 @@ export const doLogin = (login, password) => dispatch => (
         }
     )
 );
+
+export const doLogout = () => dispatch => (
+    auth.logout().then(
+        () => { /* everything is fine */ },
+        () => {
+          dispatch(addGlobalErrorMessage('Logout failed'));
+          return Promise.reject();
+        }
+    )
+);
