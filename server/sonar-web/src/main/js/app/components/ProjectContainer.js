@@ -38,11 +38,15 @@ class ProjectContainer extends React.Component {
       return null;
     }
 
+    const isFile = ['FIL', 'UTS'].includes(this.props.project.qualifier);
+
     const configuration = this.props.project.configuration || {};
 
     return (
         <div>
-          <ComponentNav component={this.props.project} conf={configuration}/>
+          {!isFile && (
+              <ComponentNav component={this.props.project} conf={configuration}/>
+          )}
           {this.props.children}
         </div>
     );
