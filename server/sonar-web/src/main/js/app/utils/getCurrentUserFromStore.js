@@ -17,7 +17,14 @@
  * along with this program; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-module.exports = function (query, options) {
-  const cond = window.SS.user || query.indexOf('__me__') === -1;
-  return cond ? options.fn(this) : options.inverse(this);
+// @flow
+import { getCurrentUser } from '../store/rootReducer';
+
+// TODO remove my usages
+const getCurrentUserFromStore = () => {
+  const getStore = require('./getStore').default;
+  const store = getStore();
+  return getCurrentUser(store.getState());
 };
+
+export default getCurrentUserFromStore;
