@@ -22,11 +22,12 @@ import { connect } from 'react-redux';
 import SettingsNav from './nav/settings/SettingsNav';
 import { getCurrentUser } from '../store/rootReducer';
 import { isUserAdmin } from '../../helpers/users';
-import handleRequiredAuthorization from '../utils/handleRequiredAuthorization';
 
 class AdminContainer extends React.Component {
   componentDidMount () {
     if (!isUserAdmin(this.props.currentUser)) {
+      // workaround cyclic dependencies
+      const handleRequiredAuthorization = require('../utils/handleRequiredAuthorization').default;
       handleRequiredAuthorization();
     }
   }

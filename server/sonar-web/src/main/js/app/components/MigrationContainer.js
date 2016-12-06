@@ -20,7 +20,6 @@
 // @flow
 import React from 'react';
 import { getSystemStatus } from '../../api/system';
-import handleRequiredMigration from '../utils/handleRequiredMigration';
 
 export default class MigrationContainer extends React.Component {
   static propTypes = {
@@ -36,6 +35,8 @@ export default class MigrationContainer extends React.Component {
       if (r.status === 'UP') {
         this.setState({ loading: false });
       } else {
+        // workaround cyclic dependencies
+        const handleRequiredMigration = require('../utils/handleRequiredMigration').default;
         handleRequiredMigration();
       }
     });
