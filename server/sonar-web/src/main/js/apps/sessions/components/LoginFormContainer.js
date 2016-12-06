@@ -23,11 +23,29 @@ import { connect } from 'react-redux';
 import LoginForm from './LoginForm';
 import { doLogin } from '../../../app/store/rootActions';
 import { getAppState } from '../../../app/store/rootReducer';
+import { getIdentityProviders } from '../../../api/users';
 
 class LoginFormContainer extends React.Component {
+  mounted: bool;
+
   static propTypes = {
     location: React.PropTypes.object.isRequired
   };
+
+  state = {};
+
+  componentDidMount () {
+    this.mounted = true;
+    getIdentityProviders().then(r => {
+      if (this.mounted) {
+        this.setState({ identityProviders: r.identityProviders });
+      }
+    });
+  }
+
+  componentWillUnmount () {
+    this.mounted = false;
+  }
 
   handleSuccessfulLogin = () => {
     window.location = this.props.location.query['return_to'] || (window.baseUrl + '/');
@@ -41,9 +59,12 @@ class LoginFormContainer extends React.Component {
   };
 
   render () {
-    // FIXME allowUsersToSignUp
+    if (!this.state.identityProviders) {
+      return null;
+    }
+
     return (
-        <LoginForm allowUsersToSignUp={false} onSubmit={this.handleSubmit}/>
+        <LoginForm identityProviders={this.state.identityProviders} onSubmit={this.handleSubmit}/>
     );
   }
 }

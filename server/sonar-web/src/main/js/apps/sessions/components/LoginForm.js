@@ -20,11 +20,11 @@
 // @flow
 import React from 'react';
 import GlobalMessagesContainer from '../../../app/components/GlobalMessagesContainer';
-import { translate, translateWithParameters } from '../../../helpers/l10n';
+import { translate } from '../../../helpers/l10n';
 
 export default class LoginForm extends React.Component {
   static propTypes = {
-    allowUsersToSignUp: React.PropTypes.bool.isRequired,
+    identityProviders: React.PropTypes.array.isRequired,
     onSubmit: React.PropTypes.func.isRequired
   };
 
@@ -45,6 +45,24 @@ export default class LoginForm extends React.Component {
 
           <GlobalMessagesContainer/>
 
+          {this.props.identityProviders.length > 0 && (
+              <section className="oauth-providers">
+                <ul>
+                  {this.props.identityProviders.map(identityProvider => (
+                      <li key={identityProvider.key}>
+                        <a href={`${window.baseUrl}/sessions/init/${identityProvider.key}`}
+                           style={{ backgroundColor: identityProvider.backgroundColor }}
+                           title={`Log in with ${identityProvider.name}` }>
+                          <img alt={identityProvider.name} width="20" height="20"
+                               src={window.baseUrl + identityProvider.iconPath}/>
+                          <span>Log in with {identityProvider.name}</span>
+                        </a>
+                      </li>
+                  ))}
+                </ul>
+              </section>
+          )}
+
           <form id="login_form" onSubmit={this.handleSubmit}>
             <div className="big-spacer-bottom">
               <label htmlFor="login" className="login-label">{translate('login')}</label>
@@ -57,12 +75,6 @@ export default class LoginForm extends React.Component {
                      placeholder={translate('login')}
                      value={this.state.login}
                      onChange={e => this.setState({ login: e.target.value })}/>
-
-              {this.props.allowUsersToSignUp && (
-                  <div className="note spacer-top spacer-left spacer-right">
-                    {translateWithParameters('sessions.new_account', window.baseUrl + '/users/new')}
-                  </div>
-              )}
             </div>
 
             <div className="big-spacer-bottom">
