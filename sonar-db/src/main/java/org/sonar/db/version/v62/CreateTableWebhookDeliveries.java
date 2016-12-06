@@ -21,6 +21,7 @@ package org.sonar.db.version.v62;
 
 import java.sql.SQLException;
 import org.sonar.db.Database;
+import org.sonar.db.version.CreateIndexBuilder;
 import org.sonar.db.version.CreateTableBuilder;
 import org.sonar.db.version.DdlChange;
 
@@ -32,6 +33,9 @@ import static org.sonar.db.version.VarcharColumnDef.UUID_SIZE;
 import static org.sonar.db.version.VarcharColumnDef.newVarcharColumnDefBuilder;
 
 public class CreateTableWebhookDeliveries extends DdlChange {
+
+  private static final String TABLE_NAME = "webhook_deliveries";
+
   public CreateTableWebhookDeliveries(Database db) {
     super(db);
   }
@@ -39,7 +43,7 @@ public class CreateTableWebhookDeliveries extends DdlChange {
   @Override
   public void execute(Context context) throws SQLException {
     context.execute(
-      new CreateTableBuilder(getDialect(), "webhook_deliveries")
+      new CreateTableBuilder(getDialect(), TABLE_NAME)
         .addPkColumn(newVarcharColumnDefBuilder().setColumnName("uuid").setLimit(UUID_SIZE).setIsNullable(false).build())
         .addColumn(newVarcharColumnDefBuilder().setColumnName("component_uuid").setLimit(UUID_SIZE).setIsNullable(false).build())
         .addColumn(newVarcharColumnDefBuilder().setColumnName("ce_task_uuid").setLimit(UUID_SIZE).setIsNullable(false).build())
@@ -51,6 +55,19 @@ public class CreateTableWebhookDeliveries extends DdlChange {
         .addColumn(newClobColumnDefBuilder().setColumnName("payload").setIsNullable(false).build())
         .addColumn(newClobColumnDefBuilder().setColumnName("error_stacktrace").setIsNullable(true).build())
         .addColumn(newBigIntegerColumnDefBuilder().setColumnName("created_at").setIsNullable(false).build())
+        .build());
+
+    context.execute(
+      new CreateIndexBuilder()
+        .setTable(TABLE_NAME)
+        .setName("component_uuid")
+        .setColumns("component_uuid")
+        .build());
+    context.execute(
+      new CreateIndexBuilder()
+        .setTable(TABLE_NAME)
+        .setName("ce_task_uuid")
+        .setColumns("ce_task_uuid")
         .build());
   }
 }
