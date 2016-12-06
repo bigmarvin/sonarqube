@@ -19,20 +19,10 @@
  */
 // @flow
 import React from 'react';
-import { connect } from 'react-redux';
-import GlobalLoading from './GlobalLoading';
-import { fetchCurrentUser } from '../store/users/actions';
-import { fetchLanguages, fetchAppState } from '../store/rootActions';
+import { requestMessages } from '../../helpers/l10n';
 
-class App extends React.Component {
+export default class LocalizationContainer extends React.Component {
   mounted: bool;
-
-  static propTypes = {
-    fetchAppState: React.PropTypes.func.isRequired,
-    fetchCurrentUser: React.PropTypes.func.isRequired,
-    fetchLanguages: React.PropTypes.func.isRequired,
-    children: React.PropTypes.element.isRequired
-  };
 
   state = {
     loading: true
@@ -46,12 +36,7 @@ class App extends React.Component {
 
   componentDidMount () {
     this.mounted = true;
-
-    this.props.fetchCurrentUser()
-        .then(this.props.fetchAppState)
-        .then(this.finishLoading)
-        .then(this.props.fetchLanguages)
-        .catch(this.finishLoading);
+    requestMessages().then(this.finishLoading, this.finishLoading);
   }
 
   componentWillUnmount () {
@@ -59,15 +44,6 @@ class App extends React.Component {
   }
 
   render () {
-    if (this.state.loading) {
-      return <GlobalLoading/>;
-    }
-
-    return this.props.children;
+    return this.state.loading ? null : this.props.children;
   }
 }
-
-export default connect(
-    null,
-    { fetchAppState, fetchCurrentUser, fetchLanguages }
-)(App);
