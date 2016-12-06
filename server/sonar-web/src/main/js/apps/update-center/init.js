@@ -29,12 +29,9 @@ import Router from './router';
 import Plugins from './plugins';
 
 const App = new Marionette.Application();
-const init = function (el) {
+const init = function ({ el, updateCenterActive }) {
   // State
-  // FIXME window.SS.updateCenterActive
-  this.state = new Backbone.Model({
-    updateCenterActive: true
-  });
+  this.state = new Backbone.Model({ updateCenterActive });
 
   // Layout
   this.layout = new Layout({ el });
@@ -73,10 +70,10 @@ const init = function (el) {
   });
 };
 
-App.on('start', function (el) {
-  init.call(App, el);
+App.on('start', function (options) {
+  init.call(App, options);
 });
 
-export default function (el) {
-  App.start(el);
+export default function (el, updateCenterActive) {
+  App.start({ el, updateCenterActive });
 }
