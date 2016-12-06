@@ -127,7 +127,6 @@ public class ProjectAdministrationTest {
   }
 
   // SONAR-4203
-  @Ignore("UUID column added in Events page")
   @Test
   @Ignore("history page is not available yet")
   public void delete_version_of_multimodule_project() {
