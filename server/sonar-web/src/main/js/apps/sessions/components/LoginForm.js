@@ -43,8 +43,6 @@ export default class LoginForm extends React.Component {
         <div>
           <h1 className="maintenance-title text-center">Log In to SonarQube</h1>
 
-          <GlobalMessagesContainer/>
-
           {this.props.identityProviders.length > 0 && (
               <section className="oauth-providers">
                 <ul>
@@ -64,6 +62,8 @@ export default class LoginForm extends React.Component {
           )}
 
           <form id="login_form" onSubmit={this.handleSubmit}>
+            <GlobalMessagesContainer/>
+
             <div className="big-spacer-bottom">
               <label htmlFor="login" className="login-label">{translate('login')}</label>
               <input type="text"

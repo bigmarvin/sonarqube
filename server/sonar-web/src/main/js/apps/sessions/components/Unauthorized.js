@@ -36,7 +36,7 @@ export default class Unauthorized extends React.Component {
 
           {!!message && (
               <p className="spacer-top">
-                {message}
+                Reason : {message}
               </p>
           )}
 
