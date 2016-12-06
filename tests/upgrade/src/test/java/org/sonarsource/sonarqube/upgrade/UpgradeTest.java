@@ -110,6 +110,7 @@ public class UpgradeTest {
     // These urls should be available when system requires a migration
     checkUrlIsReturningOk("/api/system/status");
     checkUrlIsReturningOk("/api/system/db_migration_status");
+    checkUrlIsReturningOk("/api/l10n/index");
     checkUrlIsReturningOk("/api/webservices/list");
 
     // These urls should not be available when system requires a migration
@@ -131,6 +132,7 @@ public class UpgradeTest {
   private void checkUrlsAfterUpgrade() {
     checkUrlIsReturningOk("/api/system/status");
     checkUrlIsReturningOk("/api/system/db_migration_status");
+    checkUrlIsReturningOk("/api/l10n/index");
     checkUrlIsReturningOk("/api/webservices/list");
 
     checkUrlIsReturningOk("/api/issues/search?projectKeys=org.apache.struts%3Astruts-core");
